@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Inscription à une formation</title>
+</head>
+<body>
+
+  <header>
+    <h1>Plateforme de formations en ligne</h1>
+    <nav>
+      <a href="index.html">Accueil</a> |
+      <a href="view-user.html">Inscription</a> |
+      <a href="view-admin.html">Admin</a>
+    </nav>
+    <hr />
+  </header>
+
+  <main>
+    <h2>Inscription à une formation</h2>
+    <p>Remplis le formulaire pour t’inscrire à une formation.</p>
+
+    <form action="#" method="post">
+      <fieldset>
+        <legend>Informations d’inscription</legend>
+
+        <p>
+          <label for="formation">Formation</label><br />
+          <select id="formation" name="formation" required>
+            <option value="">-- Choisir une formation --</option>
+            <option value="notion">Notion pour solopreneurs (2h)</option>
+            <option value="wordpress">WordPress express (3h)</option>
+            <option value="seo">SEO débutant (1h30)</option>
+            <option value="youtube">Lancer sa formation YouTube (2h)</option>
+          </select>
+        </p>
+
+        <p>
+          <label for="prenom">Prénom</label><br />
+          <input type="text" id="prenom" name="prenom" required />
+        </p>
+
+        <p>
+          <label for="nom">Nom</label><br />
+          <input type="text" id="nom" name="nom" required />
+        </p>
+
+        <p>
+          <label for="email">Adresse courriel</label><br />
+          <input type="email" id="email" name="email" required />
+        </p>
+
+        <p>
+          Mode de participation<br />
+          <label>
+            <input type="radio" name="mode" value="en-ligne" required />
+            En ligne
+          </label><br />
+          <label>
+            <input type="radio" name="mode" value="hybride" />
+            Hybride
+          </label>
+        </p>
+
+        <p>
+          <label>
+            <input type="checkbox" name="consentement" required />
+            J’accepte d’être contacté au sujet de cette formation.
+          </label>
+        </p>
+
+        <p>
+          <button type="submit">Soumettre mon inscription</button>
+          <button type="reset">Réinitialiser</button>
+        </p>
+      </fieldset>
+    </form>
+
+    <hr />
+
+    <section>
+      <h3>Formations populaires (aperçu)</h3>
+      <ul>
+        <li><strong>SEO débutant</strong> — 1h30 — 39$</li>
+        <li><strong>WordPress express</strong> — 3h — 59$</li>
+        <li><strong>Notion pour solopreneurs</strong> — 2h — 49$</li>
+      </ul>
+      <p>Les vidéos sont hébergées sur YouTube (lien à ajouter plus tard).</p>
+    </section>
+  </main>
+
+  <footer>
+    <hr />
+    <p>&copy; 2026 — Plateforme de formations en ligne</p>
+  </footer>
+
+</body>
+</html>
