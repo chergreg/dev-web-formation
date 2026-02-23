@@ -3,5 +3,13 @@
   { "id": 2, "titre": "Marketing — offre claire", "duree": "60 min", "prix": 39, "lien": "https://www.youtube.com/watch?v=yyyy" },
   { "id": 3, "titre": "Productivité — plan 7 jours", "duree": "30 min", "prix": 19, "lien": "https://www.youtube.com/watch?v=zzzz" },
   { "id": 4, "titre": "SEO — bases solides", "duree": "50 min", "prix": 25, "lien": "https://www.youtube.com/watch?v=aaaa" },
+  { "id": 5, "titre": "Emailing — newsletter simple", "duree": "40 min", "prix": 22, "lien": "https://www.youtube.com/watch?v=bbbb" },
+  { "id": 5, "titre": "Emailing — newsletter simple", "duree": "40 min", "prix": 22, "lien": "https://www.youtube.com/watch?v=bbbb" },
+  { "id": 5, "titre": "Emailing — newsletter simple", "duree": "40 min", "prix": 22, "lien": "https://www.youtube.com/watch?v=bbbb" },
+  { "id": 5, "titre": "Emailing — newsletter simple", "duree": "40 min", "prix": 22, "lien": "https://www.youtube.com/watch?v=bbbb" },
+  { "id": 5, "titre": "Emailing — newsletter simple", "duree": "40 min", "prix": 22, "lien": "https://www.youtube.com/watch?v=bbbb" },
+  { "id": 5, "titre": "Emailing — newsletter simple", "duree": "40 min", "prix": 22, "lien": "https://www.youtube.com/watch?v=bbbb" },
+  { "id": 5, "titre": "Emailing — newsletter simple", "duree": "40 min", "prix": 22, "lien": "https://www.youtube.com/watch?v=bbbb" },
+  { "id": 5, "titre": "Emailing — newsletter simple", "duree": "40 min", "prix": 22, "lien": "https://www.youtube.com/watch?v=bbbb" },
   { "id": 5, "titre": "Emailing — newsletter simple", "duree": "40 min", "prix": 22, "lien": "https://www.youtube.com/watch?v=bbbb" }
 ]

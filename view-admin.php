@@ -12,13 +12,6 @@ require_once __DIR__ . '/src/JsonRepository.php';
 
 $repo = new JsonRepository(__DIR__ . '/data/formations.json');
 $formations = $repo->all();
-
-// Test visuel rapide
-echo "<h1>Test v1</h1>";
-echo "<pre>";
-print_r($formations);
-echo "</pre>";
-exit;
 ?>
 
 
@@ -126,83 +119,32 @@ exit;
                     <th class="text-end">Actions</th>
                   </tr>
                 </thead>
-                <tbody id="formationsTbody">
+                <tbody>
+                <?php foreach ($formations as $formation): ?>
                   <tr>
-                    <td>
-                      <div class="fw-semibold">Lancer son offre en 7 jours</div>
-                      <div class="muted small">Promesse, prix, tunnel simple, plan d’action.</div>
-                    </td>
-                    <td class="text-nowrap"><span class="badge text-bg-secondary">—</span></td>
-                    <td class="text-nowrap">2026-02-17</td>
-                    <td class="text-end">
-                      <div class="btn-group btn-group-sm">
-                        <a class="btn btn-ghost" href="#">Voir</a>
-                        <a class="btn btn-ghost" href="#">Modifier</a>
-                        <a class="btn btn-danger" href="#">Supprimer</a>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="fw-semibold">YouTube pour formateurs</div>
-                      <div class="muted small">Structure, script, miniature, publication.</div>
-                    </td>
-                    <td class="text-nowrap"><span class="badge text-bg-secondary">—</span></td>
-                    <td class="text-nowrap">2026-02-18</td>
-                    <td class="text-end">
-                      <div class="btn-group btn-group-sm">
-                        <a class="btn btn-ghost" href="#">Voir</a>
-                        <a class="btn btn-ghost" href="#">Modifier</a>
-                        <a class="btn btn-danger" href="#">Supprimer</a>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="fw-semibold">Bootstrap — pages efficaces</div>
-                      <div class="muted small">Mise en page responsive + composants essentiels.</div>
-                    </td>
-                    <td class="text-nowrap"><span class="badge text-bg-secondary">—</span></td>
-                    <td class="text-nowrap">2026-02-19</td>
-                    <td class="text-end">
-                      <div class="btn-group btn-group-sm">
-                        <a class="btn btn-ghost" href="#">Voir</a>
-                        <a class="btn btn-ghost" href="#">Modifier</a>
-                        <a class="btn btn-danger" href="#">Supprimer</a>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="fw-semibold">Marketing — offre claire</div>
-                      <div class="muted small">Positionnement, promesse, page de vente.</div>
-                    </td>
-                    <td class="text-nowrap"><span class="badge text-bg-secondary">—</span></td>
-                    <td class="text-nowrap">2026-02-20</td>
-                    <td class="text-end">
-                      <div class="btn-group btn-group-sm">
-                        <a class="btn btn-ghost" href="#">Voir</a>
-                        <a class="btn btn-ghost" href="#">Modifier</a>
-                        <a class="btn btn-danger" href="#">Supprimer</a>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="fw-semibold">Productivité — plan 7 jours</div>
-                      <div class="muted small">Priorités, routines, système simple.</div>
-                    </td>
-                    <td class="text-nowrap"><span class="badge text-bg-secondary">—</span></td>
-                    <td class="text-nowrap">2026-02-21</td>
-                    <td class="text-end">
-                      <div class="btn-group btn-group-sm">
-                        <a class="btn btn-ghost" href="#">Voir</a>
-                        <a class="btn btn-ghost" href="#">Modifier</a>
-                        <a class="btn btn-danger" href="#">Supprimer</a>
-                      </div>
-                    </td>
-                  </tr>
+                      <td>
+                          <div class="fw-semibold">
+                              <?= htmlspecialchars($formation["titre"]) ?>
+                          </div>
+                      </td>
 
+                      <td>
+                          <?= htmlspecialchars($formation["duree"]) ?>
+                      </td>
+
+                      <td>
+                          <?= (int)$formation["prix"] ?>$
+                      </td>
+
+                      <td class="text-end">
+                          <div class="btn-group btn-group-sm">
+                              <a href="#" class="btn btn-outline-secondary">Voir</a>
+                              <a href="#" class="btn btn-outline-secondary">Modifier</a>
+                              <a href="#" class="btn btn-outline-danger">Supprimer</a>
+                          </div>
+                      </td>
+                  </tr>
+                <?php endforeach; ?>
                 </tbody>
               </table>
             </div>
