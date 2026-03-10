@@ -1,0 +1,91 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-03-10T13:49:48.396894Z",
+  "student": {
+    "folder": "dev-web-formation",
+    "path": "C:\\xampp\\htdocs\\dev-web-formation"
+  },
+  "criteria": {
+    "index.php": {
+      "group": "GROUP1",
+      "label": "index.php",
+      "pts": 1,
+      "max": 1,
+      "message": ""
+    },
+    "view-user.php": {
+      "group": "GROUP1",
+      "label": "view-user.php",
+      "pts": 0,
+      "max": 1,
+      "message": "manquant"
+    },
+    "view-admin.php": {
+      "group": "GROUP1",
+      "label": "view-admin.php",
+      "pts": 1,
+      "max": 1,
+      "message": ""
+    },
+    "data": {
+      "group": "GROUP1",
+      "label": "data",
+      "pts": 1,
+      "max": 1,
+      "message": ""
+    },
+    "partials/_head.php": {
+      "group": "GROUP1",
+      "label": "partials/_head.php",
+      "pts": 1,
+      "max": 1,
+      "message": ""
+    },
+    "partials/_navbar.php": {
+      "group": "GROUP1",
+      "label": "partials/_navbar.php",
+      "pts": 1,
+      "max": 1,
+      "message": ""
+    },
+    "partials/_footer.php": {
+      "group": "GROUP1",
+      "label": "partials/_footer.php",
+      "pts": 1,
+      "max": 1,
+      "message": ""
+    },
+    "partials/_libjs.php": {
+      "group": "GROUP1",
+      "label": "partials/_libjs.php",
+      "pts": 1,
+      "max": 1,
+      "message": ""
+    },
+    "src/JsonRepository.php": {
+      "group": "GROUP1",
+      "label": "src/JsonRepository.php",
+      "pts": 1,
+      "max": 1,
+      "message": ""
+    },
+    "assets/css/styles.css": {
+      "group": "GROUP1",
+      "label": "assets/css/styles.css",
+      "pts": 1,
+      "max": 1,
+      "message": ""
+    },
+    "assets/img": {
+      "group": "GROUP1",
+      "label": "assets/img",
+      "pts": 0,
+      "max": 1,
+      "message": "manquant"
+    }
+  },
+  "totals": {
+    "pts": 9,
+    "max": 11
+  }
+}

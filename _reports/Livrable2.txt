@@ -1,0 +1,25 @@
+
+Validation automatique
+dev-web-formation
+
+## STRUCTURE
+Structure du projet
+* index.php : OK
+* view-user.php : FAIL
+    - manquant
+* view-admin.php : OK
+* data : OK
+* partials/_head.php : OK
+* partials/_navbar.php : OK
+* partials/_footer.php : OK
+* partials/_libjs.php : OK
+* src/JsonRepository.php : OK
+* assets/css/styles.css : OK
+* assets/img : FAIL
+    - manquant
+
+--------------
+
+
+TOTAL : 9 / 11 (82%)
+
