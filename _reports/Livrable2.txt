@@ -3,7 +3,6 @@ Validation automatique
 dev-web-formation
 
 ## STRUCTURE
-Structure du projet
 * index.php : OK
 * view-user.php : FAIL
     - manquant
@@ -20,6 +19,39 @@ Structure du projet
 
 --------------
 
+## STRUCTURE PHP
+* Critere import php (index.php) : OK
+* Critere import php (view-user.php) : FAIL
+    - fichier manquant
+* Critere import php (view-admin.php) : FAIL
+    - _libjs.php manquant ou multiple
 
-TOTAL : 9 / 11 (82%)
+--------------
+
+## INCLUDE_CSS
+* Critère style.css partagé (index.php) : OK
+* Critère style.css partagé (view-user.php) : FAIL
+    - fichier manquant
+* Critère style.css partagé (view-admin.php) : OK
+* Critère style.css dans _head.php : OK
+
+--------------
+
+## BOOTSTRAP
+* Critère bootstrap.css partagé (index.php) : OK
+* Critère bootstrap.css partagé (view-user.php) : FAIL
+    - fichier manquant
+* Critère bootstrap.css partagé (view-admin.php) : OK
+* Critère bootstrap.js partagé (index.php) : OK
+* Critère bootstrap.js partagé (view-user.php) : FAIL
+    - fichier manquant
+* Critère bootstrap.js partagé (view-admin.php) : OK
+* Critere bootstrap.css _head.php : OK
+* Critere bootstrap.js _libjs.php : FAIL
+    - bootstrap.min.js absent de partials/_libjs.php
+
+--------------
+
+
+TOTAL : 18 / 26 (69%)
 
