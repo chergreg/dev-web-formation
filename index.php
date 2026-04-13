@@ -1,3 +1,18 @@
+<?php
+declare(strict_types=1);
+
+// 1) Charger le repository
+require_once __DIR__ . '/src/FormationRepository.php';
+
+// 2) Chemin du fichier JSON
+$repo = new FormationRepository(__DIR__ . '/data/formations.json');
+
+// 3) Récupération des formations
+$formations = $repo->all();
+
+// Optionnel: afficher uniquement les formations actives
+// $formations = array_values(array_filter($formations, fn($f) => ($f['statut'] ?? 'active') === 'active'));
+?>
 <!doctype html>
 <html lang="fr">
 <head>
@@ -52,143 +67,127 @@
       </div>
 
       <div class="row g-3 g-lg-4">
-        <!-- 1 -->
-        <div class="col-12 col-md-6 col-lg-4">
-          <article class="card h-100">
-            <div class="card-body">
-              <div class="yt-thumb mb-3">
-                <div class="yt-play" aria-hidden="true">
-                  <span>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M8 5v14l11-7L8 5z"/>
-                    </svg>
-                  </span>
-                </div>
-              </div>
-              <h3 class="card-title h5 mb-2">Lancer son offre en 7 jours</h3>
-              <p class="muted mb-3">Un plan clair pour définir ta promesse, ton prix et ton premier tunnel simple.</p>
-              <div class="d-flex gap-2">
-                <a class="btn btn-accent w-100" href="view-user.html">Inscription</a>
-                <a class="btn btn-ghost" href="#" aria-disabled="true">Aperçu</a>
-              </div>
+
+
+
+<?php foreach ($formations as $f): ?>
+  <?php
+    $id     = (int)($f['id'] ?? 0);
+    $titre  = htmlspecialchars((string)($f['titre'] ?? 'Sans titre'));
+    $desc   = htmlspecialchars((string)($f['description'] ?? ''));
+    $duree  = htmlspecialchars((string)($f['duree'] ?? ''));
+    $prix   = (float)($f['prix'] ?? 0);
+    $youtube = trim((string)($f['youtube_url'] ?? ''));
+    $statut = (string)($f['statut'] ?? 'active');
+
+    // Format prix
+    $prixTxt = number_format($prix, 2, ',', ' ') . ' $';
+
+    // Filtrer formations inactives (optionnel)
+    if ($statut !== 'active') {
+      continue;
+    }
+
+    // --- Thumbnail YouTube (simple) ---
+    $thumbUrl = null;
+    if ($youtube !== '' && filter_var($youtube, FILTER_VALIDATE_URL)) {
+      $videoId = null;
+
+      // youtu.be/VIDEOID
+      if (preg_match('~youtu\.be/([a-zA-Z0-9_-]{6,})~', $youtube, $m)) {
+        $videoId = $m[1];
+      }
+      // youtube.com/watch?v=VIDEOID
+      if (!$videoId && preg_match('~v=([a-zA-Z0-9_-]{6,})~', $youtube, $m)) {
+        $videoId = $m[1];
+      }
+      // youtube.com/embed/VIDEOID
+      if (!$videoId && preg_match('~/embed/([a-zA-Z0-9_-]{6,})~', $youtube, $m)) {
+        $videoId = $m[1];
+      }
+
+      if ($videoId) {
+        $thumbUrl = "https://img.youtube.com/vi/" . $videoId . "/hqdefault.jpg";
+      }
+    }
+
+    // Fallback description courte
+    $descTxt = $desc !== '' ? $desc : 'Description à venir…';
+  ?>
+
+  <div class="col-12 col-md-6 col-lg-4">
+    <article class="card h-100">
+      <div class="card-body">
+
+        <div class="yt-thumb mb-3" style="position:relative; border-radius:12px; overflow:hidden;">
+          <?php if ($thumbUrl): ?>
+            <img
+              src="<?= htmlspecialchars($thumbUrl) ?>"
+              alt="Aperçu vidéo YouTube"
+              style="width:100%; height:170px; object-fit:cover; display:block;"
+              loading="lazy"
+            >
+            <a href="<?= htmlspecialchars($youtube) ?>" target="_blank" rel="noopener"
+               aria-label="Ouvrir l’aperçu YouTube"
+               style="position:absolute; inset:0; display:block;">
+              <span class="yt-play" aria-hidden="true"
+                    style="position:absolute; inset:0; display:grid; place-items:center;">
+                <span style="width:54px; height:54px; border-radius:999px; background:rgba(0,0,0,.55);
+                             display:grid; place-items:center;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 5v14l11-7L8 5z"/>
+                  </svg>
+                </span>
+              </span>
+            </a>
+          <?php else: ?>
+            <div style="width:100%; height:170px; background:#e9ecef; display:grid; place-items:center;">
+              <div class="text-muted" style="font-size:14px;">Aperçu vidéo indisponible</div>
             </div>
-          </article>
+          <?php endif; ?>
         </div>
 
-        <!-- 2 -->
-        <div class="col-12 col-md-6 col-lg-4">
-          <article class="card h-100">
-            <div class="card-body">
-              <div class="yt-thumb mb-3">
-                <div class="yt-play" aria-hidden="true">
-                  <span>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M8 5v14l11-7L8 5z"/>
-                    </svg>
-                  </span>
-                </div>
-              </div>
-              <h3 class="card-title h5 mb-2">YouTube pour formateurs</h3>
-              <p class="muted mb-3">Script, structure et miniatures : produire des vidéos utiles sans y passer ta vie.</p>
-              <div class="d-flex gap-2">
-                <a class="btn btn-accent w-100" href="view-user.html">Inscription</a>
-                <a class="btn btn-ghost" href="#" aria-disabled="true">Aperçu</a>
-              </div>
-            </div>
-          </article>
+        <h3 class="card-title h5 mb-2"><?= $titre ?></h3>
+
+        <p class="muted mb-2"><?= $descTxt ?></p>
+
+        <div class="d-flex flex-wrap gap-2 mb-3">
+          <?php if ($duree !== ''): ?>
+            <span class="badge text-bg-light">⏱️ <?= $duree ?></span>
+          <?php endif; ?>
+          <span class="badge text-bg-light">💲 <?= htmlspecialchars($prixTxt) ?></span>
         </div>
 
-        <!-- 3 -->
-        <div class="col-12 col-md-6 col-lg-4">
-          <article class="card h-100">
-            <div class="card-body">
-              <div class="yt-thumb mb-3">
-                <div class="yt-play" aria-hidden="true">
-                  <span>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M8 5v14l11-7L8 5z"/>
-                    </svg>
-                  </span>
-                </div>
-              </div>
-              <h3 class="card-title h5 mb-2">Branding minimaliste</h3>
-              <p class="muted mb-3">Couleurs, typo, ton : créer une identité cohérente et simple à appliquer partout.</p>
-              <div class="d-flex gap-2">
-                <a class="btn btn-accent w-100" href="view-user.html">Inscription</a>
-                <a class="btn btn-ghost" href="#" aria-disabled="true">Aperçu</a>
-              </div>
-            </div>
-          </article>
+        <div class="d-flex gap-2">
+          <a class="btn btn-accent w-100" href="inscription.php?formation_id=<?= $id ?>">
+            Inscription
+          </a>
+
+          <?php if ($thumbUrl && $youtube !== ''): ?>
+            <a class="btn btn-ghost" href="<?= htmlspecialchars($youtube) ?>" target="_blank" rel="noopener">
+              Aperçu
+            </a>
+          <?php else: ?>
+            <a class="btn btn-ghost disabled" href="#" tabindex="-1" aria-disabled="true">
+              Aperçu
+            </a>
+          <?php endif; ?>
         </div>
 
-        <!-- 4 -->
-        <div class="col-12 col-md-6 col-lg-4">
-          <article class="card h-100">
-            <div class="card-body">
-              <div class="yt-thumb mb-3">
-                <div class="yt-play" aria-hidden="true">
-                  <span>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M8 5v14l11-7L8 5z"/>
-                    </svg>
-                  </span>
-                </div>
-              </div>
-              <h3 class="card-title h5 mb-2">Pages web efficaces (Bootstrap)</h3>
-              <p class="muted mb-3">Grille, composants, bonnes pratiques : construire vite des pages propres et responsive.</p>
-              <div class="d-flex gap-2">
-                <a class="btn btn-accent w-100" href="view-user.html">Inscription</a>
-                <a class="btn btn-ghost" href="#" aria-disabled="true">Aperçu</a>
-              </div>
-            </div>
-          </article>
-        </div>
+      </div>
+    </article>
+  </div>
 
-        <!-- 5 -->
-        <div class="col-12 col-md-6 col-lg-4">
-          <article class="card h-100">
-            <div class="card-body">
-              <div class="yt-thumb mb-3">
-                <div class="yt-play" aria-hidden="true">
-                  <span>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M8 5v14l11-7L8 5z"/>
-                    </svg>
-                  </span>
-                </div>
-              </div>
-              <h3 class="card-title h5 mb-2">Email & conversion</h3>
-              <p class="muted mb-3">Créer une séquence simple (welcome + valeur) pour transformer des vues en inscrits.</p>
-              <div class="d-flex gap-2">
-                <a class="btn btn-accent w-100" href="view-user.html">Inscription</a>
-                <a class="btn btn-ghost" href="#" aria-disabled="true">Aperçu</a>
-              </div>
-            </div>
-          </article>
-        </div>
+<?php endforeach; ?>
 
-        <!-- 6 -->
-        <div class="col-12 col-md-6 col-lg-4">
-          <article class="card h-100">
-            <div class="card-body">
-              <div class="yt-thumb mb-3">
-                <div class="yt-play" aria-hidden="true">
-                  <span>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M8 5v14l11-7L8 5z"/>
-                    </svg>
-                  </span>
-                </div>
-              </div>
-              <h3 class="card-title h5 mb-2">Organisation & productivité</h3>
-              <p class="muted mb-3">Systèmes légers pour planifier, publier et livrer sans te surcharger (solo-friendly).</p>
-              <div class="d-flex gap-2">
-                <a class="btn btn-accent w-100" href="view-user.html">Inscription</a>
-                <a class="btn btn-ghost" href="#" aria-disabled="true">Aperçu</a>
-              </div>
-            </div>
-          </article>
-        </div>
+
+
+
+
+
+
+
+
       </div>
     </section>
 
