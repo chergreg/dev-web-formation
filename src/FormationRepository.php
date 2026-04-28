@@ -19,7 +19,7 @@ class FormationRepository
      */
     public function all(): array
     {
-        $sql = 'SELECT ' . $this->columns() . ' FROM formations ORDER BY id ASC';
+        $sql = 'SELECT ' . $this->formationColumns() . ' FROM formations ORDER BY id ASC';
         $stmt = $this->pdo->query($sql);
 
         return $stmt->fetchAll();
@@ -31,7 +31,7 @@ class FormationRepository
      */
     public function allPublished(): array
     {
-        $sql = 'SELECT ' . $this->columns() . '
+        $sql = 'SELECT ' . $this->formationColumns() . '
                 FROM formations
                 WHERE statut = :statut
                 ORDER BY id ASC';
@@ -47,7 +47,7 @@ class FormationRepository
      */
     public function find(int $id): ?array
     {
-        $sql = 'SELECT ' . $this->columns() . '
+        $sql = 'SELECT ' . $this->formationColumns() . '
                 FROM formations
                 WHERE id = :id
                 LIMIT 1';
@@ -174,7 +174,179 @@ class FormationRepository
         return $this->create($data);
     }
 
-    private function columns(): string
+    /**
+     * Retourne les utilisateurs disponibles pour les inscriptions.
+     */
+    public function allUsers(): array
+    {
+        $stmt = $this->pdo->query('SELECT id, nom, email FROM users ORDER BY nom ASC, email ASC');
+
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Retourne toutes les inscriptions avec les informations utilisateur et formation.
+     */
+    public function allInscriptions(): array
+    {
+        $sql = 'SELECT
+                    i.id,
+                    i.user_id,
+                    i.formation_id,
+                    i.commentaire,
+                    i.reference_source,
+                    i.details_reference,
+                    i.statut,
+                    i.commentaire_admin,
+                    i.created_at,
+                    u.nom AS user_nom,
+                    u.email AS user_email,
+                    f.titre AS formation_titre
+                FROM inscriptions i
+                LEFT JOIN users u ON u.id = i.user_id
+                LEFT JOIN formations f ON f.id = i.formation_id
+                ORDER BY i.created_at DESC, i.id DESC';
+
+        $stmt = $this->pdo->query($sql);
+
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Retourne une inscription par son id.
+     */
+    public function findInscription(int $id): ?array
+    {
+        $sql = 'SELECT
+                    i.id,
+                    i.user_id,
+                    i.formation_id,
+                    i.commentaire,
+                    i.reference_source,
+                    i.details_reference,
+                    i.statut,
+                    i.commentaire_admin,
+                    i.created_at,
+                    u.nom AS user_nom,
+                    u.email AS user_email,
+                    f.titre AS formation_titre
+                FROM inscriptions i
+                LEFT JOIN users u ON u.id = i.user_id
+                LEFT JOIN formations f ON f.id = i.formation_id
+                WHERE i.id = :id
+                LIMIT 1';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
+
+        $inscription = $stmt->fetch();
+
+        return $inscription !== false ? $inscription : null;
+    }
+
+    /**
+     * Crée une inscription dans la base de données.
+     */
+    public function createInscription(array $data): array
+    {
+        $inscription = $this->sanitizeInscription($data);
+        $this->assertValidInscription($inscription);
+
+        $sql = 'INSERT INTO inscriptions (
+                    user_id,
+                    formation_id,
+                    commentaire,
+                    reference_source,
+                    details_reference,
+                    statut,
+                    commentaire_admin
+                ) VALUES (
+                    :user_id,
+                    :formation_id,
+                    :commentaire,
+                    :reference_source,
+                    :details_reference,
+                    :statut,
+                    :commentaire_admin
+                )';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($inscription);
+
+        $id = (int)$this->pdo->lastInsertId();
+        $created = $this->findInscription($id);
+
+        if ($created === null) {
+            throw new RuntimeException("L'inscription a été créée, mais elle est introuvable ensuite.");
+        }
+
+        return $created;
+    }
+
+    /**
+     * Met à jour une inscription existante.
+     */
+    public function updateInscription(int $id, array $data): array
+    {
+        $existing = $this->findInscription($id);
+
+        if ($existing === null) {
+            throw new RuntimeException("Inscription introuvable (id={$id}).");
+        }
+
+        $inscription = $this->sanitizeInscription(array_merge($existing, $data));
+        $this->assertValidInscription($inscription);
+
+        $sql = 'UPDATE inscriptions
+                SET
+                    user_id = :user_id,
+                    formation_id = :formation_id,
+                    commentaire = :commentaire,
+                    reference_source = :reference_source,
+                    details_reference = :details_reference,
+                    statut = :statut,
+                    commentaire_admin = :commentaire_admin
+                WHERE id = :id';
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(array_merge($inscription, ['id' => $id]));
+
+        $updated = $this->findInscription($id);
+
+        if ($updated === null) {
+            throw new RuntimeException("L'inscription a été modifiée, mais elle est introuvable ensuite.");
+        }
+
+        return $updated;
+    }
+
+    /**
+     * Supprime une inscription.
+     */
+    public function deleteInscription(int $id): bool
+    {
+        $stmt = $this->pdo->prepare('DELETE FROM inscriptions WHERE id = :id');
+        $stmt->execute(['id' => $id]);
+
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * Si id présent et existant: update.
+     * Sinon: create.
+     */
+    public function saveInscription(array $data): array
+    {
+        $id = isset($data['id']) ? (int)$data['id'] : 0;
+
+        if ($id > 0 && $this->findInscription($id) !== null) {
+            return $this->updateInscription($id, $data);
+        }
+
+        return $this->createInscription($data);
+    }
+
+    private function formationColumns(): string
     {
         return 'id,
                 titre,
@@ -211,6 +383,26 @@ class FormationRepository
             'nb_videos' => max(1, (int)($data['nb_videos'] ?? 1)),
             'categories' => $categories !== '' ? $categories : null,
             'statut' => trim((string)($data['statut'] ?? 'brouillon')),
+        ];
+    }
+
+    /**
+     * Normalise les champs selon la structure actuelle de ta table inscriptions.
+     */
+    private function sanitizeInscription(array $data): array
+    {
+        $commentaire = trim((string)($data['commentaire'] ?? ''));
+        $detailsReference = trim((string)($data['details_reference'] ?? ''));
+        $commentaireAdmin = trim((string)($data['commentaire_admin'] ?? ''));
+
+        return [
+            'user_id' => (int)($data['user_id'] ?? 0),
+            'formation_id' => (int)($data['formation_id'] ?? 0),
+            'commentaire' => $commentaire !== '' ? $commentaire : null,
+            'reference_source' => trim((string)($data['reference_source'] ?? '')),
+            'details_reference' => $detailsReference !== '' ? $detailsReference : null,
+            'statut' => trim((string)($data['statut'] ?? 'en_attente')),
+            'commentaire_admin' => $commentaireAdmin !== '' ? $commentaireAdmin : null,
         ];
     }
 
@@ -257,6 +449,28 @@ class FormationRepository
 
         if (!in_array($formation['statut'], ['brouillon', 'publie', 'archive'], true)) {
             throw new InvalidArgumentException("Le statut doit être 'brouillon', 'publie' ou 'archive'.");
+        }
+    }
+
+    /**
+     * Validation serveur simple pour une inscription.
+     */
+    private function assertValidInscription(array $inscription): void
+    {
+        if ($inscription['user_id'] <= 0) {
+            throw new InvalidArgumentException("L'utilisateur est obligatoire.");
+        }
+
+        if ($inscription['formation_id'] <= 0) {
+            throw new InvalidArgumentException('La formation est obligatoire.');
+        }
+
+        if ($inscription['reference_source'] === '') {
+            throw new InvalidArgumentException('La source de référence est obligatoire.');
+        }
+
+        if (!in_array($inscription['statut'], ['en_attente', 'confirmee', 'annulee'], true)) {
+            throw new InvalidArgumentException("Le statut doit être 'en_attente', 'confirmee' ou 'annulee'.");
         }
     }
 }
