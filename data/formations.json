@@ -4,6 +4,5 @@
   { "id": 3, "titre": "Productivité — plan 7 jours", "duree": "30 min", "prix": 19, "lien": "https://www.youtube.com/watch?v=zzzz" },
   { "id": 4, "titre": "SEO — bases solides", "duree": "50 min", "prix": 25, "lien": "https://www.youtube.com/watch?v=aaaa" },
   { "id": 5, "titre": "Emailing — newsletter simple", "duree": "40 min", "prix": 22, "lien": "https://www.youtube.com/watch?v=bbbb" },
-  { "id": 6, "titre": "Emailing — newsletter simple", "duree": "40 min", "prix": 22, "lien": "https://www.youtube.com/watch?v=bbbb" },
-  { "id": 7, "titre": "Emailing — newsletter simple", "duree": "40 min", "prix": 22, "lien": "https://www.youtube.com/watch?v=bbbb" }
+  { "id": 6, "titre": "Bootstrap avancé", "duree": "2h", "prix": 29, "lien": "https://www.youtube.com/watch?v=xxxx" }
 ]
